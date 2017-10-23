@@ -5,6 +5,9 @@ from time import time
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics import silhouette_score
 
+K_MIN = 2
+K_MAX = 50
+METHOD = "agglomerative_clustering"
 
 # extract plain tension curves from the CSV file
 csv_file = 'tension_curves.csv'
@@ -21,11 +24,20 @@ for i in range(n):
         # w = [k+1 for k in range(j+1)]  # standard weighting
         data[i, j] = np.average(tension_curves[i][:j+1], weights=w)
 
-k_range = range(2, 40)
+k_range = np.arange(K_MIN, K_MAX)
+sil_scores = np.zeros(K_MAX - K_MIN)
+all_labels = np.empty((K_MAX - K_MIN, data.shape[0]))
 for k in k_range:
     print("## {:} ##".format(k))
     start = time()
-    labels = AgglomerativeClustering(k).fit_predict(data)
+    if METHOD == "agglomerative_clustering":
+        labels = AgglomerativeClustering(k).fit_predict(data)
     print("Elapsed time: {:.4f}".format(time() - start))
     sil_score = silhouette_score(data, labels)
     print("Silhouette score: {:.6f}".format(sil_score))
+    sil_scores[k - K_MIN] = sil_score
+    all_labels[k - K_MIN] = labels
+
+np.savetxt('results/{:}_k_range.gz'.format(METHOD), k_range)
+np.savetxt('results/{:}_sil_scores.gz'.format(METHOD), sil_scores)
+np.savetxt('results/{:}_all_labels.gz'.format(METHOD), all_labels)

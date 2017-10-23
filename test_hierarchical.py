@@ -24,7 +24,6 @@ for i in range(n):
 k_range = range(2, 40)
 for k in k_range:
     print("## {:} ##".format(k))
-    data = data[:1000]
     start = time()
     labels = AgglomerativeClustering(k).fit_predict(data)
     print("Elapsed time: {:.4f}".format(time() - start))

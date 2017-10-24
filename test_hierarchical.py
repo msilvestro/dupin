@@ -2,13 +2,14 @@
 # pylint: disable=C0103
 from time import time
 import numpy as np
-from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import silhouette_score
 
 K_MIN = 2
 K_MAX = 50
 # METHOD = "agglomerative_clustering"
-METHOD = "agglomerative_clustering_md"
+# METHOD = "agglomerative_clustering_md"
+METHOD = "kmeans"
 
 # extract plain tension curves from the CSV file
 csv_file = 'tension_curves.csv'
@@ -36,8 +37,10 @@ for k in k_range:
     elif METHOD == "agglomerative_clustering_md":
         labels = AgglomerativeClustering(k, affinity='manhattan',
             linkage='average').fit_predict(data)
+    elif METHOD == "kmeans":
+        labels = KMeans(k).fit_predict(data)
     print("Elapsed time: {:.4f}".format(time() - start))
-    if METHOD == "agglomerative_clustering": 
+    if METHOD == "agglomerative_clustering" or METHOD == "kmeans":
         sil_score = silhouette_score(data, labels)
     elif METHOD == "agglomerative_clustering_md":
         sil_score = silhouette_score(data, labels, metric='manhattan')

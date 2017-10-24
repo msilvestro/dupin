@@ -298,23 +298,3 @@ def _get_medoid_cpu(metric):
         return medoid
 
     return get_medoid_cpu
-
-
-@jit
-def compute_error(dists):
-    """Compute the error of a clustering solution.
-
-    Parameters
-    ----------
-    dists : (n, k) ndarray
-        Matrix of distances between data objects and medoids.
-
-    Returns
-    -------
-    error : float
-        The within-cluster sum of distances of the clustering solution.
-
-    """
-    # take the minimum row-wise and sum the resulting vector to get the error
-    error = dists.min(axis=1).sum()
-    return error

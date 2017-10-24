@@ -4,45 +4,45 @@ from time import time
 import numpy as np
 from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import silhouette_score
+from clustering.kmedoids import pam_npass
+from clustering.metrics import (_dissimilarity_matrix, euclidean_distance,
+                                manhattan_distance)
 
 K_MIN = 2
 K_MAX = 50
-# METHOD = "agglomerative_clustering"
-# METHOD = "agglomerative_clustering_md"
-METHOD = "kmeans"
+# METHOD = "agglomerative_clustering_ed"
+METHOD = "agglomerative_clustering_md"
+# METHOD = "kmeans"
+# METHOD = "kmedoids_ed"
+# METHOD = "kmedoids_md"
 
-# extract plain tension curves from the CSV file
-csv_file = 'tension_curves.csv'
-tension_curves = np.array([np.asarray(line.split(','), dtype=np.uint32)
-                           for line in open(csv_file)])
-# get information about the tension curves dataset
-n = tension_curves.shape[0]
-max_len = max([len(ten) for ten in tension_curves])
-# and compute the weighted moving average from the plain tension curves
-data = np.zeros((n, max_len))
-for i in range(n):
-    for j in range(tension_curves[i].shape[0]):
-        w = [2**k for k in range(j+1)]  # exponential weighting
-        # w = [k+1 for k in range(j+1)]  # standard weighting
-        data[i, j] = np.average(tension_curves[i][:j+1], weights=w)
+data = np.loadtxt('data.gz')
 
 k_range = np.arange(K_MIN, K_MAX)
 sil_scores = np.zeros(K_MAX - K_MIN)
-all_labels = np.empty((K_MAX - K_MIN, data.shape[0]))
+all_labels = np.empty((K_MAX - K_MIN, data.shape[0]), dtype=np.uint32)
+if METHOD == "kmedoids_ed":
+    dissimilarity_matrix = _dissimilarity_matrix(euclidean_distance)
+    diss = dissimilarity_matrix(data)
+elif METHOD == "kmedoids_md":
+    dissimilarity_matrix = _dissimilarity_matrix(manhattan_distance)
+    diss = dissimilarity_matrix(data)
 for k in k_range:
     print("## {:} ##".format(k))
     start = time()
-    if METHOD == "agglomerative_clustering":
+    if METHOD == "agglomerative_clustering_ed":
         labels = AgglomerativeClustering(k).fit_predict(data)
     elif METHOD == "agglomerative_clustering_md":
         labels = AgglomerativeClustering(k, affinity='manhattan',
-            linkage='average').fit_predict(data)
+                                         linkage='average').fit_predict(data)
     elif METHOD == "kmeans":
         labels = KMeans(k).fit_predict(data)
+    elif METHOD in ("kmedoids_ed", "kmedoids_md"):
+        labels = pam_npass(diss, k, npass=10)[0]
     print("Elapsed time: {:.4f}".format(time() - start))
-    if METHOD == "agglomerative_clustering" or METHOD == "kmeans":
+    if METHOD in ("agglomerative_clustering_ed", "kmeans", "kmedoids_ed"):
         sil_score = silhouette_score(data, labels)
-    elif METHOD == "agglomerative_clustering_md":
+    elif METHOD in ("agglomerative_clustering_md", "kmedoids_md"):
         sil_score = silhouette_score(data, labels, metric='manhattan')
     print("Silhouette score: {:.6f}".format(sil_score))
     sil_scores[k - K_MIN] = sil_score

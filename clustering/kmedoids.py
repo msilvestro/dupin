@@ -1,7 +1,7 @@
 """Various implementations of the k-medoids algorithm."""
 import numpy as np
 from numba import jit
-from clustering.kmedoids_helper import _get_clusters, _get_medoid, compute_error
+from clustering.kmedoids_helper import _get_clusters, _get_medoid
 from clustering.metrics import _dissimilarity_matrix
 
 
@@ -102,7 +102,7 @@ def pam(data, k, metric=None, method='memory'):
     return get_clusters(data, medoids)
 
 
-def pam_npass(data, k, metric=False, method='memory', npass=1):
+def pam_npass(data, k, metric=None, method='memory', npass=1):
     """Partitioning Around Medoids, a realization of k-medoids.
 
     Parameters
@@ -305,7 +305,8 @@ def _clarans(metric):
 
         for _ in range(numlocal):
             # step 1
-            # choose an arbitrary node as starting medoids and compute its error
+            # choose an arbitrary node as starting medoids and compute its
+            # error
             medoids = np.empty(k, dtype=np.uint32)
             for i in range(k):
                 np.random.shuffle(choices)
@@ -322,9 +323,9 @@ def _clarans(metric):
 
             for _ in range(maxneighbor):
                 # step 2
-                # find a random neighbor, i.e. change only one of the medoids with
-                # a random object (that is not already a medoid) of the whole data
-                # set
+                # find a random neighbor, i.e. change only one of the medoids
+                # with a random object (that is not already a medoid) of the
+                # whole data set
                 random_neigh = np.copy(medoids)
                 np.random.shuffle(choices)
                 non_med = choices[-1]
@@ -332,12 +333,12 @@ def _clarans(metric):
                 random_neigh[non_med_i] = non_med
 
                 # step 3
-                # compute the error of the random neighbor and compare it with the
-                # current node (i.e. current medoids)
+                # compute the error of the random neighbor and compare it with
+                # the current node (i.e. current medoids)
                 new_error = 0
                 for i in range(n):
                     min_dist = np.inf
-                    for j, med in enumerate(random_neigh):
+                    for med in random_neigh:
                         dist = metric(data[i], data[med])
                         if dist < min_dist:
                             min_dist = dist

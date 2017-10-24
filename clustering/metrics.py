@@ -37,7 +37,7 @@ def dissimilarity_matrix(data, metric):
 
 def _dissimilarity_matrix(metric):
     @jit(nopython=True)
-    def dissimilarity_matrix(data):
+    def dm(data):
         """Compute the dissimilarity matrix of a dataset.
 
         Parameters
@@ -67,12 +67,12 @@ def _dissimilarity_matrix(metric):
                 diss[j, i] = dist
         return diss
 
-    return dissimilarity_matrix
+    return dm
 
 
 def _dissimilarity_matrix_partial(metric):
     @jit(nopython=True)
-    def dissimilarity_matrix_partial(data, start, m):
+    def dmp(data, start, m):
         """Compute the dissimilarity matrix of a dataset.
 
         Parameters
@@ -106,7 +106,7 @@ def _dissimilarity_matrix_partial(metric):
                 diss[i, j] = dist
         return diss
 
-    return dissimilarity_matrix_partial
+    return dmp
 
 
 @jit(nopython=True)

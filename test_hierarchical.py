@@ -1,13 +1,14 @@
 """Hierarchical clustering for DoppioGioco."""
 # pylint: disable=C0103
-import numpy as np
 from time import time
+import numpy as np
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics import silhouette_score
 
 K_MIN = 2
 K_MAX = 50
-METHOD = "agglomerative_clustering"
+# METHOD = "agglomerative_clustering"
+METHOD = "agglomerative_clustering_md"
 
 # extract plain tension curves from the CSV file
 csv_file = 'tension_curves.csv'
@@ -32,8 +33,14 @@ for k in k_range:
     start = time()
     if METHOD == "agglomerative_clustering":
         labels = AgglomerativeClustering(k).fit_predict(data)
+    elif METHOD == "agglomerative_clustering_md":
+        labels = AgglomerativeClustering(k, affinity='manhattan',
+            linkage='average').fit_predict(data)
     print("Elapsed time: {:.4f}".format(time() - start))
-    sil_score = silhouette_score(data, labels)
+    if METHOD == "agglomerative_clustering": 
+        sil_score = silhouette_score(data, labels)
+    elif METHOD == "agglomerative_clustering_md":
+        sil_score = silhouette_score(data, labels, metric='manhattan')
     print("Silhouette score: {:.6f}".format(sil_score))
     sil_scores[k - K_MIN] = sil_score
     all_labels[k - K_MIN] = labels

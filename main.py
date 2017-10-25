@@ -16,6 +16,13 @@ g.render('export/story_graph')
 # %% Get all linear stories and show some statistics.
 linear_stories = doppiogioco.get_linear_stories()
 
+# %% Write all linear stories in a text file.
+stories_str = ""
+for story in linear_stories:
+    stories_str += ",".join(story) + "\n"
+with open("export/linear_stories.txt", "w") as text_file:
+    text_file.write(stories_str)
+
 # %% Story number and story ends statistics.
 print("Number of units:\t{}".format(len(doppiogioco.get_nodes())))
 print("Number of stories:\t{}".format(len(linear_stories)))

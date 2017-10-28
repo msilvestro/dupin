@@ -12,7 +12,8 @@ K_MIN = 2
 K_MAX = 50
 # METHOD = "agglomerative_clustering_ed"
 # METHOD = "agglomerative_clustering_md"
-METHOD = "agglomerative_clustering_sd"
+# METHOD = "agglomerative_clustering_sd"
+METHOD = "agglomerative_clustering_cosine"
 # METHOD = "kmeans"
 # METHOD = "kmedoids_ed"
 # METHOD = "kmedoids_md"
@@ -42,6 +43,9 @@ for k in k_range:
     elif METHOD == "agglomerative_clustering_sd":
         labels = AgglomerativeClustering(k, affinity='precomputed',
                                          linkage='average').fit_predict(diss)
+    elif METHOD == "agglomerative_clustering_cosine":
+        labels = AgglomerativeClustering(k, affinity='cosine',
+                                         linkage='average').fit_predict(data)
     elif METHOD == "kmeans":
         labels = KMeans(k).fit_predict(data)
     elif METHOD in ("kmedoids_ed", "kmedoids_md"):
@@ -53,6 +57,8 @@ for k in k_range:
         sil_score = silhouette_score(data, labels, metric='manhattan')
     elif METHOD == "agglomerative_clustering_sd":
         sil_score = silhouette_score(diss, labels, metric='precomputed')
+    elif METHOD == "agglomerative_clustering_cosine":
+        sil_score = silhouette_score(data, labels, metric='cosine')
     print("Silhouette score: {:.6f}".format(sil_score))
     sil_scores[k - K_MIN] = sil_score
     all_labels[k - K_MIN] = labels

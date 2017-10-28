@@ -154,3 +154,26 @@ def euclidean_distance(vec1, vec2):
 
     """
     return np.sqrt(((vec1 - vec2)**2).sum())
+
+
+@jit(nopython=True)
+def supremum_distance(vec1, vec2):
+    r"""Compute the supremum distance between two vectors.
+
+    Parameters
+    ----------
+    vec1, vec2 : array_like
+        Vectors to be used to compute the distance.
+
+    Returns
+    -------
+    dist : float
+        Manhattan distance between the two vectors.
+
+    Notes
+    -----
+    The supremum distance is defined as the maximum of absolute differences
+    between each coordinate of the vectors, i.e. :math:`\max_i |x_i - y_i|`.
+
+    """
+    return np.absolute(vec1 - vec2).max()

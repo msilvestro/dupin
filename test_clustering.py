@@ -6,12 +6,13 @@ from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import silhouette_score
 from clustering.kmedoids import pam_npass
 from clustering.metrics import (_dissimilarity_matrix, euclidean_distance,
-                                manhattan_distance)
+                                manhattan_distance, supremum_distance)
 
 K_MIN = 2
 K_MAX = 50
 # METHOD = "agglomerative_clustering_ed"
-METHOD = "agglomerative_clustering_md"
+# METHOD = "agglomerative_clustering_md"
+METHOD = "agglomerative_clustering_sd"
 # METHOD = "kmeans"
 # METHOD = "kmedoids_ed"
 # METHOD = "kmedoids_md"
@@ -27,6 +28,9 @@ if METHOD == "kmedoids_ed":
 elif METHOD == "kmedoids_md":
     dissimilarity_matrix = _dissimilarity_matrix(manhattan_distance)
     diss = dissimilarity_matrix(data)
+elif METHOD == "agglomerative_clustering_sd":
+    dissimilarity_matrix = _dissimilarity_matrix(supremum_distance)
+    diss = dissimilarity_matrix(data)
 for k in k_range:
     print("## {:} ##".format(k))
     start = time()
@@ -35,6 +39,9 @@ for k in k_range:
     elif METHOD == "agglomerative_clustering_md":
         labels = AgglomerativeClustering(k, affinity='manhattan',
                                          linkage='average').fit_predict(data)
+    elif METHOD == "agglomerative_clustering_sd":
+        labels = AgglomerativeClustering(k, affinity='precomputed',
+                                         linkage='average').fit_predict(diss)
     elif METHOD == "kmeans":
         labels = KMeans(k).fit_predict(data)
     elif METHOD in ("kmedoids_ed", "kmedoids_md"):
@@ -44,6 +51,8 @@ for k in k_range:
         sil_score = silhouette_score(data, labels)
     elif METHOD in ("agglomerative_clustering_md", "kmedoids_md"):
         sil_score = silhouette_score(data, labels, metric='manhattan')
+    elif METHOD == "agglomerative_clustering_sd":
+        sil_score = silhouette_score(diss, labels, metric='precomputed')
     print("Silhouette score: {:.6f}".format(sil_score))
     sil_scores[k - K_MIN] = sil_score
     all_labels[k - K_MIN] = labels

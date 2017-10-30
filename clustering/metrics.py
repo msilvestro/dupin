@@ -177,3 +177,40 @@ def supremum_distance(vec1, vec2):
 
     """
     return np.absolute(vec1 - vec2).max()
+
+
+@jit(nopython=True)
+def manhattan_warped_distance(vec1, vec2):
+    r"""Compute the Manhattan distance between two vectors.
+    TODO update
+
+    Parameters
+    ----------
+    vec1, vec2 : array_like
+        Vectors to be used to compute the distance.
+
+    Returns
+    -------
+    dist : float
+        Manhattan distance between the two vectors.
+
+    Notes
+    -----
+    The Manhattan distance is defined as the sum of absolute differences
+    between each coordinate of the vectors, i.e. :math:`\sum_i |x_i - y_i|`.
+
+    """
+    if len(vec1) == len(vec2):
+        return np.absolute(vec1 - vec2).sum()
+    elif len(vec1) > len(vec2):
+        shorter = vec2
+        longer = vec1
+    else:
+        shorter = vec1
+        longer = vec2
+    n = len(shorter)
+    ratio = (len(longer) - 1) / (n - 1)
+    warped = np.empty(n)
+    for i in range(n):
+        warped[i] = longer[int(np.round(i*ratio))]
+    return np.absolute(shorter - warped).sum()

@@ -10,7 +10,7 @@ K_MIN = 2
 K_MAX = 50
 METHOD = "agglomerative_clustering_wd"
 
-csv_file = 'test/curves_exp.csv'
+csv_file = 'curves_exp.csv'
 data = np.array([np.asarray(line.split(','), dtype=np.float)
                            for line in open(csv_file)])
 max_len = max([len(ten) for ten in data])

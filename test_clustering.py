@@ -17,10 +17,15 @@ METHOD = 'kmedoids'
 DISTANCE = 'dtw'
 DEBUG = False
 
-data = np.loadtxt('data/curves_exp_zeros.gz')
+if DISTANCE in ('euclidean', 'manhattan', 'supremum'):
+    data = np.loadtxt('data/curves_exp_zeros.gz')
+elif DISTANCE == 'dtw':
+    csv_file = 'data/curves_exp.csv'
+    data = np.array([np.asarray(line.split(','), dtype=np.float)
+                    for line in open(csv_file)])
 if DEBUG:
     np.random.shuffle(data)
-    data = data[:100]
+    data = data[:1000]
 
 k_range = np.arange(K_MIN, K_MAX)
 sil_scores = np.zeros(K_MAX - K_MIN)

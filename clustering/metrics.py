@@ -1,6 +1,8 @@
 """Metrics and dissimilarity matrix."""
 import numpy as np
 from numba import jit
+from math import gcd
+from scipy.interpolate import interp1d
 
 
 @jit
@@ -179,10 +181,11 @@ def supremum_distance(vec1, vec2):
     return np.absolute(vec1 - vec2).max()
 
 
-@jit(nopython=True)
+@jit
 def manhattan_warped_distance(vec1, vec2):
     r"""Compute the Manhattan distance between two vectors.
     TODO update
+    TODO to be tested
 
     Parameters
     ----------
@@ -200,17 +203,21 @@ def manhattan_warped_distance(vec1, vec2):
     between each coordinate of the vectors, i.e. :math:`\sum_i |x_i - y_i|`.
 
     """
-    if len(vec1) == len(vec2):
-        return np.absolute(vec1 - vec2).sum()
-    elif len(vec1) > len(vec2):
-        shorter = vec2
-        longer = vec1
-    else:
-        shorter = vec1
-        longer = vec2
-    n = len(shorter)
-    ratio = (len(longer) - 1) / (n - 1)
-    warped = np.empty(n)
-    for i in range(n):
-        warped[i] = longer[int(np.round(i*ratio))]
-    return np.absolute(shorter - warped).sum()
+    n = vec1.shape[0]
+    m = vec2.shape[0]
+
+    def lcm(a, b):
+        """Least common multiple."""
+        return a * b // gcd(a, b)
+
+    def warp(vector, length, kind='linear'):
+        n = vector.shape[0]
+        linspace = np.linspace(0, 1, n)
+        interp = interp1d(linspace, vector, kind=kind)
+        new_linspace = np.linspace(0, 1, length)
+        return interp(new_linspace)
+
+    l = lcm(n, m)
+    vec1_warped = warp(vec1, l)
+    vec2_warped = warp(vec2, l)
+    return np.absolute(vec1_warped - vec2_warped).sum() / l

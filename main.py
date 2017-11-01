@@ -19,8 +19,8 @@ linear_stories = doppiogioco.get_linear_stories()
 # %% Write all linear stories in a text file.
 stories_str = ""
 for story in linear_stories:
-    stories_str += ",".join(story) + "\n"
-with open("export/linear_stories.txt", "w") as text_file:
+    stories_str += ','.join(story) + '\n'
+with open('export/linear_stories.txt', 'w') as text_file:
     text_file.write(stories_str)
 
 # %% Story number and story ends statistics.
@@ -87,23 +87,3 @@ HTML(doppiogioco.get_html_linear_story(random_story))
 # %% Get all tension curves.
 tension_curves = [doppiogioco.get_tension_curve_for_story(story)
                   for story in linear_stories]
-
-# %% Get all linear stories emotions.
-import csv
-
-def get_emotions_for_story(story):
-    emotions = []
-    for i, unit in enumerate(story):
-        if doppiogioco.has_emotion(unit):
-            emotions.append(doppiogioco.get_unit_emotion(unit))
-        else:
-            emotions.append('')
-    return emotions
-
-story_emotions = [get_emotions_for_story(story) for story in linear_stories]
-print(story_emotions[:10])
-
-with open('story_emotions.csv', 'w', encoding='utf8', newline='') as csv_file:
-    writer = csv.writer(csv_file)
-    for story in story_emotions:
-        writer.writerow(story)

@@ -14,11 +14,13 @@ from fastdtw import fastdtw
 K_MIN = 2
 K_MAX = 51
 METHOD = 'kmedoids'
-DISTANCE = 'dtw'
+DISTANCE = 'manhattan_warped'
 DEBUG = False
 
 if DISTANCE in ('euclidean', 'manhattan', 'supremum'):
     data = np.loadtxt('data/curves_exp_zeros.gz')
+elif DISTANCE == 'manhattan_warped':
+    data = np.loadtxt('data/curves_exp_warped.gz')
 elif DISTANCE == 'dtw':
     csv_file = 'data/curves_exp.csv'
     data = np.array([np.asarray(line.split(','), dtype=np.float)
@@ -34,7 +36,7 @@ all_labels = np.empty((K_MAX - K_MIN, data.shape[0]), dtype=np.uint32)
 if DISTANCE == 'euclidean':
     dm = _dissimilarity_matrix(euclidean_distance)
     diss = dm(data)
-elif DISTANCE == 'manhattan':
+elif DISTANCE in ('manhattan', 'manhattan_warped'):
     dm = _dissimilarity_matrix(manhattan_distance)
     diss = dm(data)
 elif DISTANCE == 'supremum':

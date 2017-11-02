@@ -13,7 +13,7 @@ from fastdtw import fastdtw
 
 K_MIN = 2
 K_MAX = 51
-METHOD = 'agglomerative'
+METHOD = 'kmedoids'
 DISTANCE = 'manhattan_warped'
 DEBUG = False
 

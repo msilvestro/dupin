@@ -35,7 +35,7 @@ for story in linear_stories:
     counts[end] += 1
 plt.bar(range(len(counts)), counts.values(), align='center')
 plt.xticks(range(len(counts)), counts.keys(), rotation='vertical')
-plt.title("Distribution of linear stories among possible endings")
+# plt.title("Distribution of linear stories among possible endings")
 plt.savefig('export/distr_endings.pdf')
 plt.show()
 
@@ -47,8 +47,8 @@ print("Story length mode:\t{}".format(statistics.mode(story_lengths)))
 print("Story length max:\t{}".format(max(story_lengths)))
 print("Story length min:\t{}".format(min(story_lengths)))
 
-plt.hist(story_lengths)
-plt.title("Histogram of story lengths distribution")
+plt.hist(story_lengths, bins=range(5, 14), align='left', edgecolor='black')
+# plt.title("Histogram of story lengths distribution")
 plt.savefig('export/hist_lengths.pdf')
 plt.show()
 

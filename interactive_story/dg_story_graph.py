@@ -168,7 +168,7 @@ class DoppioGiocoStoryGraph(StoryGraph):
         # node displayed as boxes and not as ellipses
         graph.node_attr.update(shape='circle')
         # group together similar units
-        # graph.body.append(self._get_unit_ranks())
+        graph.body.append(self._get_unit_ranks())
         return graph
 
     @staticmethod

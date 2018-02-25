@@ -16,7 +16,7 @@ METHOD = 'kmedoids'  # method of clustering
 DISTANCE = 'manhattan'  # distance for the clustering
 
 # load the data
-data = np.loadtxt('../../data/warped_curves.gz')
+data = np.loadtxt('data/warped_curves.gz')
 
 # initialize the vectors
 k_range = np.arange(K_MIN, K_MAX)
@@ -48,15 +48,15 @@ for k in k_range:
 
 # save the results
 np.savetxt(
-    '{:}_{:}_k_range.gz'.format(METHOD, DISTANCE),
+    'results/clustering/{:}_{:}_k_range.gz'.format(METHOD, DISTANCE),
     k_range
 )
 np.savetxt(
-    '{:}_{:}_sil_scores.gz'.format(METHOD, DISTANCE),
+    'results/clustering/{:}_{:}_sil_scores.gz'.format(METHOD, DISTANCE),
     sil_scores
 )
 np.savetxt(
-    '{:}_{:}_all_labels.gz'.format(METHOD, DISTANCE),
+    'results/clustering/{:}_{:}_all_labels.gz'.format(METHOD, DISTANCE),
     all_labels
 )
 np.savetxt(

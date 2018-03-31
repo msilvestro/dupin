@@ -2,7 +2,7 @@
 # pylint: disable=C0103
 from time import time
 import numpy as np
-from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_samples
 from clustering.kmedoids import pam_npass
 from clustering.metrics import (dissimilarity_matrix, _dissimilarity_matrix,
@@ -25,7 +25,8 @@ all_labels = np.empty((K_MAX - K_MIN, data.shape[0]), dtype=np.uint32)
 sil_samples = np.empty((K_MAX - K_MIN, data.shape[0]))
 
 # compute the dissimilarity matrix based on the chosen distance
-dm = _dissimilarity_matrix(manhattan_distance)
+if DISTANCE == 'manhattan':
+    dm = _dissimilarity_matrix(manhattan_distance)
 diss = dm(data)
 
 # perform the clustering according to the parameters
@@ -35,7 +36,8 @@ for k in k_range:
 
     # start the clustering and time it
     start = time()
-    labels = pam_npass(diss, k, npass=10)[0]
+    if METHOD == 'kmedoids':
+        labels = pam_npass(diss, k, npass=10)[0]
     print("Elapsed time: {:.4f}".format(time() - start))
 
     # compute the silhouettes for the clustering

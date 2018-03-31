@@ -157,11 +157,12 @@ class DoppioGiocoStoryGraph(StoryGraph):
         graph = Digraph(name=self.__class__.__name__, format='pdf')
         for unit in sorted(self.get_nodes()):
             if unit == '000':
-                color = '#000000'
+                color, fontcolor = '#000000', '#ffffff'
             else:
-                color = self._get_emotion_color(self.get_unit_emotion(unit))
+                color, fontcolor = self._get_emotion_color(
+                    self.get_unit_emotion(unit))
             graph.node(unit, style='filled', color='black',
-                       fillcolor=color, fontcolor='white')
+                       fillcolor=color, fontcolor=fontcolor)
         graph.edges(self._get_ordered_edge_list())
         # set orientation to be left to right (LR)
         graph.graph_attr.update(rankdir='LR')
@@ -173,11 +174,12 @@ class DoppioGiocoStoryGraph(StoryGraph):
 
     @staticmethod
     def _get_emotion_color(emotion):
-        # helper for drawing the graph, associate a color to each emotion
-        positive_high = '#0000ff'
-        positive_low = '#ffc0bf'
-        negative_low = '#c0c0ff'
-        negative_high = '#ff0000'
+        # helper for drawing the graph, associate to each emotion a background
+        # color and a text color
+        positive_high = ('#0000ff', '#ffffff')
+        positive_low = ('#ffc0bf', '#000000')
+        negative_low = ('#c0c0ff', '#000000')
+        negative_high = ('#ff0000', '#ffffff')
         emotions_to_color = {
             "joy": positive_high,
             "amusement": positive_high,

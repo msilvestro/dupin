@@ -58,7 +58,7 @@ labels = all_labels[k - k_range[0]]
 
 n, max_len = data.shape
 # compute the maximum amplitude of the curves, i.e. how much space to reserve
-# for all plots to be 
+# for all plots to be
 amp = int(np.ceil(max(abs(data.max()), abs(data.min()))))
 
 def _get_nearest_curves(center, curves, metric, num=20):

@@ -22,6 +22,7 @@ with open(
 doppiogioco = DoppioGiocoStoryGraph()
 
 def get_theoretical_values(unit):
+    """Get theoretical values for a unit."""
     tension_teor = doppiogioco.get_unit_tension(unit)
     valence_teor = np.sign(tension_teor)
     arousal_teor = np.abs(tension_teor)
@@ -29,8 +30,9 @@ def get_theoretical_values(unit):
     return valence_teor, arousal_teor
 
 def get_emotion_consistency(unit):
+    """Compute emotion consistency for a unit."""
     valence_teor, arousal_teor = get_theoretical_values(unit)
-    
+
     valence_norm = valences[unit] / 2 - 1
     arousal_norm = arousals[unit]
 
@@ -51,12 +53,12 @@ for unit in sorted(doppiogioco.get_nodes()):
     if unit in valences.keys():
         # get the score if there is any survey result
         score, vals, aros = get_emotion_consistency(unit)
-    
+
         if score > threshold:
             count += 1
-            fstr = "{:} & {:} & {:} & {:} & {:.3f} & {:.3f} & \\bfseries {:.2f}\% \\\\" 
+            fstr = r"{:} & {:} & {:} & {:} & {:.3f} & {:.3f} & \\bfseries {:.2f}\% \\\\"
         else:
-            fstr = "{:} & {:} & {:} & {:} & {:.3f} & {:.3f} & {:.2f}\% \\\\" 
+            fstr = r"{:} & {:} & {:} & {:} & {:.3f} & {:.3f} & {:.2f}\% \\\\"
         output = fstr.format(
             unit,
             emotion,

@@ -1,8 +1,12 @@
 # DUPIN
 
-Detective UPon INteractive stories is the implementation of the method described in my thesis for the Master's Degree in Stochastics and Data Science at the University of Turin, **Computer-Assisted Evaluation of Story-Driven Interactive Storytelling Systems**. Read more at [my personal webpage][page].
+Detective UPon INteractive stories is the implementation of the method described in my thesis for the Master's Degree in Stochastics and Data Science at the University of Turin, **Computer-Assisted Evaluation of Story-Driven Interactive Storytelling Systems**.
 
-[page]: http://matteosilvestro.com/university#masters-degree-thesis
+- [Thesis][tesi_sds]
+- [Slides for the final defense][pres_sds]
+
+[tesi_sds]: /docs/thesis.pdf
+[pres_sds]: /docs/slides.pdf
 
 ## Abstract
 
